@@ -6,6 +6,7 @@ Created on Wed Oct 17 22:21:07 2018
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 def generate_data(n):
     """ Generate initial data
@@ -80,16 +81,23 @@ def generate_w(x, bits):
     return w
 
 def main():
-    bits = 100
-
-    accuracies = [-1] * 20
-    for i in range(20):
-        x, running_count, a = generate_data(bits)
-        guesses = generate_guess(a, bits)
-        accuracies[i] = count_correct(x, guesses, bits)
+    n = [100, 500, 1000, 5000]
+    accuracies = [[0 for x in range(20)] for y in range(4)]
+    averages = []
     
-    average = (np.sum(accuracies))/(20*bits)
-    print("Accuracy without w: " + str(average))
+    for i in range(20):
+        for j in range(4):
+            x, running_count, a = generate_data(n[j])
+            guesses = generate_guess(a, n[j])
+            accuracies[j][i] = count_correct(x, guesses, n[j])
+
+    for i in range(4):
+        averages.append(sum(accuracies[i])/(20 * n[i]))
+    
+    print(averages)
+    plt.scatter(n, averages)
+    plt.xlabel("Size of data")
+    plt.ylabel("Average accuracy")
 
 if __name__ == "__main__":
     main()
