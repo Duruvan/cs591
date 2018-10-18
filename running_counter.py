@@ -78,42 +78,6 @@ def generate_w(x, bits):
                 w[i] = 0
     
     return w
-    
-
-def generate_guess_w(w, a, bits):
-    """ Generate guesses using a vector of initial guesses
-        Paramaters:
-            w - initial guess vector
-            a - noisy data
-            bits - number of bits
-    """
-    
-    data = a
-    guesses = [-1] * bits
-    count = 0
-    
-    for i in range(bits):
-        a[i] = a[i] - count
-        if a[i] < 0:
-            a[i] += 1
-            a[i - 1] = 0
-            count = count - 1
-            
-        if data[i] == 0:
-            guesses[i] = 0
-        elif data[i] == 1:
-            rand = np.random.rand()
-            if rand <= (2/3):
-                guesses[i] = w[i]
-                if guesses[i] == 1:
-                    count += 1
-            else:
-                guesses[i] = 1
-                count += 1
-        elif data[i] == 2:
-            guesses[i] = 1
-            count += 1
-    return guesses
 
 def main():
     bits = 100
@@ -126,17 +90,6 @@ def main():
     
     average = (np.sum(accuracies))/(20*bits)
     print("Accuracy without w: " + str(average))
-    
-    accuracies = [-1] * 20
-    for i in range(20):
-        x, running_count, a = generate_data(bits)
-        w = generate_w(x, bits)
-        guesses = generate_guess_w(w, a, bits)
-
-        accuracies[i] = count_correct(x, guesses, bits)
-    
-    average_with_w = (np.sum(accuracies))/(20*bits)
-    print("Accuracy with w: " + str(average_with_w))
 
 if __name__ == "__main__":
     main()
